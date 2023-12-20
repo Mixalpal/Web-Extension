@@ -27,15 +27,17 @@ browser.tabs.onActivated.addListener(async ({ tabId }) => {
   let tab: Tabs.Tab
 
   try {
-    tab = await browser.tabs.get(previousTabId)
+    tab = await browser.tabs.get(tabId)
     previousTabId = tabId
   }
   catch {
     return
   }
 
+  console.log(await browser.storage.local.get('timely-blocked-sites'))
+
   // eslint-disable-next-line no-console
-  console.log('previous tab', tab)
+  console.log('current tab', tab)
   sendMessage('tab-prev', { title: tab.title }, { context: 'content-script', tabId })
 })
 
@@ -43,7 +45,7 @@ onMessage('get-current-tab', async () => {
   try {
     const tab = await browser.tabs.get(previousTabId)
     return {
-      title: tab?.title,
+      title: tab?.url,
     }
   }
   catch {
@@ -51,4 +53,8 @@ onMessage('get-current-tab', async () => {
       title: undefined,
     }
   }
+})
+
+onMessage('add-new-site', async () => {
+
 })
