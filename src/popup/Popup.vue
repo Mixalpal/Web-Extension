@@ -77,12 +77,13 @@ body {
 .popup-content {
     display:flex;
     width: 100%;
-    height: 100%;
+    height: 300px;
+    margin-bottom: 0;
 }
 
 .navbar {
     width: 17%;
-    height: 100%;
+    height: 300px;
     border-right: solid 1px black;
 }
 
@@ -108,6 +109,7 @@ body {
 }
 
 .main-window {
+  width: 83%;
     padding: 6px;
 }
 </style>
