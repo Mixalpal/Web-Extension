@@ -1,12 +1,18 @@
 <script setup lang="ts">
-import { useToggle } from '@vueuse/core'
+//import { sendMessage, onMessage } from 'webext-bridge/options';
 import 'uno.css'
 
-const [show, toggle] = useToggle(false)
+const time = ref()
+
 </script>
 
 <template>
-  <div class="fixed right-0 bottom-0 m-5 z-100 flex items-end font-sans select-none leading-1em">
+  <h1>Вы уверены, что хотите посетить этот сайт?</h1>
+  <a><div>Перейти на сайт</div></a>
+  <h3>Расширение автоматически отключится</h3>
+  <h3>За эту сессию вы работали {{ time }}</h3>
+
+  <!-- <div class="fixed right-0 bottom-0 m-5 z-100 flex items-end font-sans select-none leading-1em">
     <div
       class="bg-white text-gray-800 rounded-lg shadow w-max h-min"
       p="x-4 y-2"
@@ -26,5 +32,5 @@ const [show, toggle] = useToggle(false)
     >
       <pixelarticons-power class="block m-auto text-white text-lg" />
     </button>
-  </div>
+  </div> -->
 </template>

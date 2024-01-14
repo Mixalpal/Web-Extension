@@ -1,6 +1,9 @@
 import { onMessage, sendMessage } from 'webext-bridge/background'
 import type { Tabs } from 'webextension-polyfill'
 
+const siteList = ref()
+const isActive = ref()
+
 // only on dev mode
 if (import.meta.hot) {
   // @ts-expect-error for background HMR
@@ -16,8 +19,6 @@ browser.runtime.onInstalled.addListener((): void => {
 
 let previousTabId = 0
 
-// communication example: send previous tab title from background page
-// see shim.d.ts for type declaration
 browser.tabs.onActivated.addListener(async ({ tabId }) => {
   if (!previousTabId) {
     previousTabId = tabId
@@ -34,11 +35,32 @@ browser.tabs.onActivated.addListener(async ({ tabId }) => {
     return
   }
 
-  console.log(await browser.storage.local.get('timely-blocked-sites'))
+  //console.log(await browser.storage.local.get('timely-blocked-sites'))
 
   // eslint-disable-next-line no-console
-  console.log('current tab', tab)
+  // console.log('current tab', tab)
   sendMessage('tab-prev', { title: tab.title }, { context: 'content-script', tabId })
+})
+
+browser.tabs.onCreated.addListener(async (tab: Tabs.Tab) => {
+  // await sendMessage('get-status', {}, 'popup')
+  // console.log(isActive.value)
+  // if(isActive.value === true) {
+  //   return;
+  // }
+  for (let i = 0; i < siteList.value.length; i++) {
+    console.log(tab);
+    console.log(siteList.value[i])
+    browser.tabs.remove(tab.id!)
+    if (tab.pendingUrl!.includes(siteList.value[i])) {
+      browser.runtime.openOptionsPage(); 
+      return;
+    }
+  }
+})
+
+browser.tabs.onUpdated.addListener(async (tab: number) => { 
+  //browser.tabs.query(tab)
 })
 
 onMessage('get-current-tab', async () => {
@@ -55,6 +77,12 @@ onMessage('get-current-tab', async () => {
   }
 })
 
-onMessage('add-new-site', async () => {
+onMessage('change-site-list', async (list) => {
+  console.log(list);
+  siteList.value = JSON.parse(JSON.stringify(list.data));
+  console.log(siteList.value)
+})
 
+onMessage('set-status', async (status) => {
+  isActive.value = JSON.parse(JSON.stringify(status));
 })

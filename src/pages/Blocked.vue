@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, onUpdated } from 'vue';
+import { sendMessage } from 'webext-bridge/popup';
 
 const siteListStorageKey = 'tymelyBlockedSites1';
-const siteList = ref<string>([""]);
+const siteList = ref<string[]>([""]);
 const siteEdit = ref(false);
 const siteString = ref('');
 
@@ -20,6 +21,7 @@ const fetchList = async () => {
 
 onMounted(async () => {
   await fetchList();
+  await sendMessage('change-site-list', JSON.stringify(siteList.value), 'background')
 })
 
 onUpdated(async () => {
@@ -27,7 +29,7 @@ onUpdated(async () => {
 })
 
 const handleDeleteClick = (site : string) => {
-  siteList.value = (siteList.value as string[]).filter((e) => {e !== site});
+  siteList.value = siteList.value.filter((e) => {e !== site});
   localStorage.setItem(siteListStorageKey, JSON.stringify(siteList.value));
 }
 
@@ -35,6 +37,7 @@ const handleAddClick = () => {
   siteEdit.value = true;
   // siteList.value.push(url);
   // browser.storage.local.set('tymely-blocked-sites', siteList);
+  
 }
 
 const saveSite = async () => {
@@ -44,11 +47,12 @@ const saveSite = async () => {
   } else {
     siteList.value.push(siteString.value);
     localStorage.setItem(siteListStorageKey, JSON.stringify(siteList.value))
+    await sendMessage('change-site-list', JSON.stringify(siteList.value), 'background')
     siteString.value = "";
   }
 
-  //await browser.storage.sync.set({ tymelyBlockedSites: siteString.value });
   siteEdit.value = false;
+  
   
   await fetchList();
 }

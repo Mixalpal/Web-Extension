@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { onMessage, sendMessage } from 'webext-bridge/background';
 import Blocked from './../pages/Blocked.vue'
 import Pomodoro from './../pages/Pomodoro.vue'
 import Settings from './../pages/Settings.vue'
@@ -18,6 +19,13 @@ const activeTab = ref(Pages.blocked)
 const handleTabChange = (page: Pages) => {
   activeTab.value = page
 }
+
+onMessage('get-status', async() => {
+  
+  const status = JSON.parse(localStorage.getItem('tymely-on')!);
+  console.log(`got ${status}`)
+  sendMessage('set-status', status, 'background')
+}) 
 </script>
 
 <template>
