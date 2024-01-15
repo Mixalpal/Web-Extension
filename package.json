@@ -1,6 +1,6 @@
 {
-  "name": "vitesse-webext",
-  "displayName": "Vitesse WebExt",
+  "name": "tymely",
+  "displayName": "Timely",
   "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@8.3.1",
@@ -74,5 +74,8 @@
   },
   "lint-staged": {
     "*": "eslint --fix"
+  },
+  "dependencies": {
+    "vue-countdown": "^1.0.4"
   }
 }

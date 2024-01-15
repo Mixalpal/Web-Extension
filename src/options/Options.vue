@@ -5,7 +5,7 @@ const time = ref('0 ч. 0 мин.')
 
 const handleButtonClick = () => {
   localStorage.setItem('tymely-on', JSON.stringify(false));
-  window.open('vk.com')
+  window.open('https://vk.com')
 }
 </script>
 

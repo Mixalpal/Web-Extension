@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { onMessage, sendMessage } from 'webext-bridge/background';
+import { onMessage, sendMessage } from 'webext-bridge/popup';
 import Blocked from './../pages/Blocked.vue'
 import Pomodoro from './../pages/Pomodoro.vue'
 import Settings from './../pages/Settings.vue'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUpdated } from 'vue';
-import { sendMessage } from 'webext-bridge/popup';
+import { sendMessage, onMessage } from 'webext-bridge/popup';
 
 const siteListStorageKey = 'tymelyBlockedSites1';
 const siteList = ref<string[]>([""]);
@@ -57,12 +57,16 @@ const saveSite = async () => {
   await fetchList();
 }
 
-
+onMessage('get-status', async() => {
+  
+  const status = JSON.parse(localStorage.getItem('tymely-on')!);
+  console.log(`got ${status}`)
+  sendMessage('set-status', JSON.stringify(status), 'background')
+}) 
 </script>
 
 <template>
   <div style="width: 100%">
-    Blocked
     <div class="blocked-sites-list">
       <div v-for="site in siteList"
         
@@ -74,18 +78,17 @@ const saveSite = async () => {
       @blur="saveSite"
       :disabled="!siteEdit"/>
     </div>
-    <div class="add-circle"
-      @click="handleAddClick">
+    <img class="add-circle"
+      src="./../assets/add.png"
+      @click="handleAddClick"/>
 
-    </div>
   </div>
 </template>
 
 <style>
 .add-circle {
-  width: 60px;
-  height: 60px;
-  background-color: aqua;
+  width: 40px;
+  height: 40px;
   position: absolute;
   bottom: 10px;
   right: 10px;

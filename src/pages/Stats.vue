@@ -4,6 +4,6 @@
 
 <template>
   <div>
-    Stats
+    Not here yet(
   </div>
 </template>

@@ -43,16 +43,17 @@ browser.tabs.onActivated.addListener(async ({ tabId }) => {
 })
 
 browser.tabs.onCreated.addListener(async (tab: Tabs.Tab) => {
-  // await sendMessage('get-status', {}, 'popup')
-  // console.log(isActive.value)
-  // if(isActive.value === true) {
-  //   return;
-  // }
+  await sendMessage('get-status', {}, 'popup')
+  console.log(isActive.value)
+  if(isActive.value === false) {
+    return;
+  }
   for (let i = 0; i < siteList.value.length; i++) {
     console.log(tab);
     console.log(siteList.value[i])
     browser.tabs.remove(tab.id!)
     if (tab.pendingUrl!.includes(siteList.value[i])) {
+      
       browser.runtime.openOptionsPage(); 
       return;
     }
