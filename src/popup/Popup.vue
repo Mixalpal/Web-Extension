@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { onMessage, sendMessage } from 'webext-bridge/popup';
 import Blocked from './../pages/Blocked.vue'
 import Pomodoro from './../pages/Pomodoro.vue'
 import Settings from './../pages/Settings.vue'
@@ -18,6 +19,13 @@ const activeTab = ref(Pages.blocked)
 const handleTabChange = (page: Pages) => {
   activeTab.value = page
 }
+
+onMessage('get-status', async() => {
+  
+  const status = JSON.parse(localStorage.getItem('tymely-on')!);
+  console.log(`got ${status}`)
+  sendMessage('set-status', status, 'background')
+}) 
 </script>
 
 <template>
@@ -77,12 +85,13 @@ body {
 .popup-content {
     display:flex;
     width: 100%;
-    height: 100%;
+    height: 300px;
+    margin-bottom: 0;
 }
 
 .navbar {
     width: 17%;
-    height: 100%;
+    height: 300px;
     border-right: solid 1px black;
 }
 
@@ -108,6 +117,7 @@ body {
 }
 
 .main-window {
+  width: 83%;
     padding: 6px;
 }
 </style>
